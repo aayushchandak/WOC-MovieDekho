@@ -130,6 +130,40 @@
                 console.error("Error getting document:", error);
             });
 
+        // Adding movie to a watchlist 
+        function watchlist(data) {
+            let checker = addNumber(data);
+
+            if (checker) {
+                updateDoc(doc(db, 'watchlist', myDocumentId), {
+                    ids: arrayUnion(...list_pass)
+                })
+                    .then(() => {
+                        // Movie added
+                        alert("Movie added to Watchlist");
+                    })
+                    .catch((error) => {
+                        console.error('Error writing document: ', error);
+                    });
+            } else {
+                alert("Movie already exists in Watchlist");
+
+            }
+        }
+
+        // Checking if the movie exists in watchlist , if doesn't add it
+        function addNumber(newNumber) {
+
+            if (list_pass.includes(newNumber)) {
+                // If the number already exists in the array , return false
+                return 0;
+            } else {
+                // If the number is not in the array , add the number
+                list_pass.push(newNumber);
+                return 1;
+            }
+        }
+
         // Removing movie from a watchlist
         function removeElem(elem) {
             const index = list_pass.indexOf(elem);
