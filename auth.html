@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieDekho: One Stop Movie Destination for all your favourite movies </title>
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Vanilla CSS -->
+    <link rel="stylesheet" href="auth.css">
+
+    <link rel="icon" href="./Assets/web_icon.png">
+</head>
+
+<body>
+
+    <!-- Reset Password Form -->
+    <div class="container reset">
+        <div class="form_box ">
+            <h1>Reset Password</h1>
+            <form id="reset_form">
+                <div class="input_group">
+                    <div class="input_field">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="resetemailInp" placeholder="Enter your E-mail" required>
+                    </div>
+                </div>
+                <div class="btn_field">
+                    <button type="submit">Send Link</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup webpage -->
+    <div class="container signup">
+        <div class="form_box signup_box">
+            <h1>Sign Up</h1>
+            <form id="signup_form_main">
+                <div class="input_group">
+                    <div class="input_field">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="nameInp" placeholder="Enter your Name" required>
+                    </div>
+                    <div class="input_field">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="signupemailInp" placeholder="Enter your E-mail">
+                    </div>
+                    <div class="input_field">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="signuppassInp" placeholder="Enter your password">
+                    </div>
+                </div>
+                <br><br><br><br>
+                <div class="btn_field">
+                    <button type="submit">Sign Up</button>
+                </div>
+                <br>
+                <span>Already a user ? </span>
+                <span id="Register">Sign In</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login webpage -->
+    <div class="container login">
+        <div class="form_box login_box">
+            <h1>Login</h1>
+            <form id="login_form">
+                <div class="input_group">
+                    <div class="input_field">
+                        <i class="fa-solid fa-envelope"></i>
+                        <input type="email" id="loginemailInp" placeholder="Enter your E-mail" required>
+                    </div>
+                    <div class="input_field">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="loginpassInp" placeholder="Enter your password">
+                    </div>
+                </div>
+                <p id="forgotPass">Forgot Password</p>
+                <br>
+                <div class="btn_field">
+                    <button type="submit">Login</button>
+                </div>
+                <br>
+                <p id="LoginBtn">Register Now</p>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- scripts -->
+
+    <script type="module">
+
+        // Importing Firebase libraries
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, set, ref, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCckS9T24PhInw4jypPJWH55XEac3LE_HY",
+            authDomain: "movie-dekho1.firebaseapp.com",
+            databaseURL: "https://movie-dekho1-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "movie-dekho1",
+            storageBucket: "movie-dekho1.appspot.com",
+            messagingSenderId: "714447475278",
+            appId: "1:714447475278:web:248d391e1d5fd3d5d5e91f",
+            measurementId: "G-CENHZQFQ7Z"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+        const auth = getAuth(app);
+        const dbref = ref(db);
+
+        // Register User function for new users
+        let RegisterUser = evt => {
+            evt.preventDefault();
+
+            createUserWithEmailAndPassword(auth, signupEmailInp.value, signupPassInp.value)
+                .then((creds) => {
+
+                    // Email verification
+                    sendEmailVerification((creds.user))
+                        .then(() => {
+                            alert("Verification email sent. Please check your email.");
+                        });
+
+                    // Creating realtime database for the user
+                    set(ref(db, 'UsersAuthList/' + creds.user.uid), {
+                        name: nameInp.value
+                    })
+
+                    setTimeout(() => {
+                        window.location.href = 'auth.html';
+                    }, 3000);
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                    alert(`${err.message}`);
+                })
+
+        }
+
+        //Sign In function for existing user
+        let SignInUser = evt => {
+            evt.preventDefault();
+
+            signInWithEmailAndPassword(auth, loginEmailInp.value, loginPassInp.value)
+                .then((creds) => {
+                    if (creds.user.emailVerified) {
+                        // Email is verified, proceed to log in
+
+                        get(child(dbref, 'UsersAuthList/' + creds.user.uid))
+                            .then((snapshot) => {
+                                if (snapshot.exists) {
+                                    sessionStorage.setItem("user-info", JSON.stringify({
+                                        name: snapshot.val().name,
+                                    }))
+                                }
+                                // Setting user credentials in session storage
+                                sessionStorage.setItem("user-creds", JSON.stringify(creds.user))
+
+                                window.location.href = 'index.html';
+                            })
+                    } else {
+                        //Email not verified
+                        alert("Please verify your email first.");
+                    }
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                    alert(`${err.message}`);
+                })
+
+        }
+
+        //Signup form EventListener
+        signupForm.addEventListener("submit", RegisterUser);
+
+        //Signin form EventListener
+        loginForm.addEventListener("submit", SignInUser);
+
+        //Reset pass form functionality
+        resetForm.addEventListener("submit", (evt) => {
+            evt.preventDefault();
+
+            if (resetEmailInp.value) {
+                //Sending link on email to reset Password
+                sendPasswordResetEmail(auth, resetEmailInp.value);
+
+                alert(`Password Reset link sent to your registered email.`);
+
+                setTimeout(() => {
+                    window.location.href = 'auth.html';
+                }, 2000);
+            } else {
+                alert(`Enter a valid email`);
+            }
+
+        });
+
+    </script>
+
+    <!-- Vanilla JS -->
+    <script src="auth.js"> </script>
+
+</body>
+
+</html>

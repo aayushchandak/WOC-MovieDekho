@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovieDekho: One Stop Movie Destination for all your favourite movies </title>
+
+    <!-- Bootstrap CSS CDN  -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <!-- Font Awesome Library CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Vanilla CSS  -->
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="icon" href="./Assets/web_icon.png">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navi" id="nav_clr">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <img id="logo" src="./Assets/logo.png" alt="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active elem text-light nav_opt" aria-current="page"
+                            href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="watch_btn" class="nav-link active elem text-light nav_opt"
+                            href="watchList.html">Watchlist</a>
+                    </li>
+                    <li class="nav-item">
+                        <p id="change_btn" class="nav-link active elem text-light nav_opt">Change Password</p>
+                    </li>
+                    <li class="nav-item">
+                        <select id="genre_btn" class="nav-link active elem text-light nav_opt">
+                            <option value="select">Select Genre</option>
+                        </select>
+                    </li>
+                </ul>
+
+                <form id="form" class="d-flex" role="search">
+                    <input id="searchBar" class="form-control me-2" type="search" placeholder="Search"
+                        aria-label="Search">
+                    <button class="btn btn-outline-success bg-success text-light " type="submit">Search</button>
+                    <button id="signout" class="btn btn-outline-success bg-success text-light " type="submit">Sign
+                        Out</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <hr color="#C0C0C0" size="7px">
+
+    <!-- Main content -->
+    <main id="main">
+
+    </main>
+
+
+    <!-- scripts -->
+
+    <!-- Bootstrap JS  -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <!-- Vanilla JS -->
+    <script src="genrePage.js"></script>
+
+    <!-- Firebase Related script -->
+    <script type="module">
+
+        // Importing Firebase libraries
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, getDoc, doc, setDoc, updateDoc, deleteField, arrayRemove, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCckS9T24PhInw4jypPJWH55XEac3LE_HY",
+            authDomain: "movie-dekho1.firebaseapp.com",
+            databaseURL: "https://movie-dekho1-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "movie-dekho1",
+            storageBucket: "movie-dekho1.appspot.com",
+            messagingSenderId: "714447475278",
+            appId: "1:714447475278:web:248d391e1d5fd3d5d5e91f",
+            measurementId: "G-CENHZQFQ7Z"
+        };
+
+        const myDocumentId = UserCreds.uid;
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore();
+        const auth = getAuth(app);
+
+        let dis_id = document.getElementsByClassName('disid');
+
+        // Document Reference to user's document
+        let docRef = doc(db, 'watchlist', myDocumentId);
+
+
+        //Creating a document for new user & importing watchlist ids if it exists
+        getDoc(docRef)
+            .then((docSnap) => {
+                if (!docSnap.exists()) {
+                    // The document does not exist, create it
+                    return setDoc(docRef, {});
+                } else {
+                    if (docSnap.data().ids) {
+                        list_pass = [...docSnap.data().ids];
+                    }
+                    if (docSnap.data().tvs) {
+                        tv_pass = [...docSnap.data().tvs];
+                    }
+                }
+            }).catch((error) => {
+                console.error("Error getting document:", error);
+            });
+
+
+        // Adding movie to a watchlist 
+        function watchlist(data) {
+            let checker = addNumber(data);
+
+            if (checker) {
+                updateDoc(doc(db, 'watchlist', myDocumentId), {
+                    ids: arrayUnion(...list_pass)
+                })
+                    .then(() => {
+                        // Movie added
+                        alert("Movie added to Watchlist");
+                    })
+                    .catch((error) => {
+                        console.error('Error writing document: ', error);
+                    });
+            } else {
+                alert("Movie already exists in Watchlist");
+            }
+        }
+
+        // Event listener for adding movie to watchlist
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.body.addEventListener('click', function (e) {
+                if (e.target && e.target.matches('.addto')) {
+                    const index = Array.from(document.getElementsByClassName('addto')).indexOf(e.target);
+                    const movieData = dis_id[index].innerHTML;
+                    watchlist(movieData);
+                }
+            });
+        });
+
+        // Search bar functionality
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const searchMovie = searchBar.value;
+
+            if (searchMovie) {
+                const FINAL_URL = `${searchURL}${searchMovie}&api_key=${KEY}`
+                fetch(FINAL_URL)
+                    .then(res => res.json())
+                    .then(data => {
+
+                        let arr = data.results;
+
+                        main.innerHTML = '';
+                        for (let movie_find of arr) {
+                            const { title, id, poster_path, overview } = (movie_find);
+                            let { vote_average } = (movie_find);
+
+                            if (poster_path) {
+                            } else {
+                                continue;
+                            }
+
+                            vote_average = Math.round(vote_average * 10) / 10;
+
+                            const movieContainer = document.createElement('div');
+                            movieContainer.classList.add('movies');
+
+                            movieContainer.innerHTML = `
+                    <img src="${imgURL + poster_path}" alt="${title}" >
+
+                <div class="movies_content">
+                    <h3>${title}</h3>
+                    <span style="color: ${getColor(vote_average)};">${vote_average}</span>
+                </div>
+    
+                <div class="description">
+                    <h3>Description</h3>
+    
+                    ${overview}
+                    
+                </div>
+                <button class="addto" type="button">+</button>
+                    <br><br>
+                    <div class="disid">${id}</div>`
+
+                            main.appendChild(movieContainer);
+                        }
+
+                        let content = document.getElementsByClassName('addto');
+                        let dis_id = document.getElementsByClassName('disid');
+
+                        // Adding searched movie to watchlist
+                        for (var i = 0; i < content.length; i++) {
+                            (function (index) {
+                                content[index].addEventListener('click', function () {
+                                    const movieData = dis_id[index].innerHTML;
+                                    watchlist(movieData);
+                                });
+                            })(i);
+                        }
+
+                    });
+            }
+        })
+
+
+        // Change password button 
+        changeBTN.addEventListener("click", () => {
+            sendPasswordResetEmail(auth, UserCreds.email);
+            alert(`Password Reset link sent to your email.`);
+        });
+
+    </script>
+
+</body>
+
+</html>

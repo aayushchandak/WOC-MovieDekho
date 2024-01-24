@@ -1,0 +1,232 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: rgb(0, 0, 0);
+    --secondary-color: rgb(78, 29, 6);
+}
+
+body {
+    font-family: Poppins;
+    margin: 0px;
+    min-height: 100vh;
+    background-image: url("./Assets/backi.gif");
+    overflow-x: hidden;
+}
+
+#logo {
+    height: 130px;
+    width: 130px;
+}
+
+.nav_opt {
+    font-size: 23px;
+    margin-left: 12px;
+}
+
+#change_btn {
+    cursor: pointer;
+}
+
+#genre_btn{
+    background: none;
+    margin-top: 3px;
+    color: aliceblue;
+}
+
+.option{
+    background-color: black;
+    color: aliceblue;
+}
+
+h2{
+    color: rgb(223, 153, 23);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.movies {
+    width: 300px;
+    margin: 1.8rem;
+    background-color: var(--secondary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.movies img {
+    width: 100%;
+}
+
+.movies_content h3 {
+    margin-top: 0px;
+}
+
+.movies_content {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem 1rem;
+}
+
+.movies_content span {
+    background-color: var(--primary-color);
+    padding: 0.25rem 0.5rem;
+    font-weight: bold;
+}
+
+.description {
+    position: absolute;
+    font-size: 19px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: wheat;
+    padding: 1.5rem;
+    max-height: 100%;
+    transform: translate(0%, 101%);
+    transition: transform 0.3s ease-in;
+}
+
+.movies:hover {
+    transform: scale(1.1);
+    -webkit-box-shadow: 0px 0px 22px 5px rgba(0, 150, 255, 0.9);
+    -moz-box-shadow: 0px 0px 22px 5px rgba(0, 150, 255, 0.9);
+    box-shadow: 0px 0px 22px 5px rgba(0, 150, 255, 0.9);
+}
+
+.movies:hover .description {
+    transform: translate(0%, 0%);
+}
+
+.addto {
+    height: 40px;
+    width: 40px;
+    color: white;
+    background-color: blue;
+    border: 0;
+    outline: 0;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 50%;
+    position: absolute;
+    left: 83%;
+    bottom: 89.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    /* margin-top: 8px; */
+}
+
+.addito {
+    height: 40px;
+    width: 40px;
+    color: white;
+    background-color: blue;
+    border: 0;
+    outline: 0;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 50%;
+    position: absolute;
+    left: 83%;
+    bottom: 89.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    /* margin-top: 8px; */
+}
+
+.removeto {
+    height: 40px;
+    width: 40px;
+    background-color: black;
+    color: white;
+    background-color: blue;
+    border: 0;
+    outline: 0;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 50%;
+    position: absolute;
+    left: 83%;
+    bottom: 89.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    cursor: pointer;
+    /* margin-top: 8px; */
+}
+
+.removito {
+    height: 40px;
+    width: 40px;
+    background-color: black;
+    color: white;
+    background-color: blue;
+    border: 0;
+    outline: 0;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 50%;
+    position: absolute;
+    left: 83%;
+    bottom: 89.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    cursor: pointer;
+    /* margin-top: 8px; */
+}
+
+.disid {
+    display: none;
+}
+
+#signout {
+    margin-left: 11px;
+    width: 150px;
+}
+
+.toggler {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btns {
+    height: 50px;
+    width: 130px;
+    outline: none;
+    border: none;
+    font-size: 21px;
+}
+
+.btn_1 {
+    border-top-left-radius: 110px;
+    border-bottom-left-radius: 110px;
+    transition: 0.6s ease-in;
+}
+
+.btn_2 {
+    border-top-right-radius: 110px;
+    border-bottom-right-radius: 110px;
+    transition: 0.6s ease-in-out;
+}
+
+.highlight {
+    background-color: purple;
+    color: white;
+}
+
+.none{
+    display: none;
+}
