@@ -2,7 +2,7 @@ const date = new Date;
 let hours = date.getHours();
 let stat = (hours < 12) ? "Morning" :
     ((hours <= 16 && hours >= 12) ? "Afternoon" : "Evening");
-console.log(stat);
+// console.log(stat);
 
 //TMDB API CALL
 const KEY = 'f99d5da18cb1af6e440c68b9bb2cc3b9';
@@ -128,7 +128,7 @@ let checkCred = () => {
     } else {
         if (UserInfo) {
             let nami = UserInfo.name.toUpperCase();
-            alert(`Hello ${UserInfo.name}`);
+            // alert(`Hello ${UserInfo.name}`);
             heading.innerHTML = `Good ${stat} ,&nbsp <b><u>${nami}</u></b> . What would you like to watch today?`;
         }
     }
